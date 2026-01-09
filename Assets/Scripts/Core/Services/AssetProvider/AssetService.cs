@@ -25,6 +25,15 @@ namespace MoonPioneer.Core.Services.AssetProvider
       var instance = container.InstantiatePrefabForComponent<T>(prefab,position, rotation, parent);
       return instance;
     }
+    
+    public GameObject Instantiate(GameObject prefab, DiContainer diContainer, Vector3 position = default, Quaternion rotation = default, Transform parent = null) => 
+      diContainer.InstantiatePrefab(prefab, position, rotation, parent);
+    
+    public T Instantiate<T>(T prefab, DiContainer diContainer, Vector3 position = default, Quaternion rotation = default, Transform parent = null) where T : Component => 
+      diContainer.InstantiatePrefabForComponent<T>(prefab, position, rotation, parent);
+    
+    public T Instantiate<T>(T prefab, DiContainer diContainer, Transform parent = null) where T : Component => 
+      diContainer.InstantiatePrefabForComponent<T>(prefab, parent);
 
     public T Load<T>(string path)
     {

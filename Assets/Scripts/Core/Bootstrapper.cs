@@ -6,7 +6,13 @@ namespace MoonPioneer.Core
 {
   public class Bootstrapper : MonoBehaviour
   {
-    [Inject] private readonly ISceneLoaderService _sceneLoaderService;
+    private ISceneLoaderService _sceneLoaderService;
+
+    [Inject]
+    private void Construct(ISceneLoaderService sceneLoaderService)
+    {
+      _sceneLoaderService = sceneLoaderService;
+    }
 
     private void Start()
     {

@@ -8,7 +8,7 @@ namespace MoonPioneer.Core.Services
   {
     public override void InstallBindings()
     {
-      Container.BindInterfacesAndSelfTo<AssetService>().AsSingle();
+      Container.Bind<IAssetService>().To<AssetService>().AsSingle();
       Container.BindInterfacesAndSelfTo<SceneLoaderService>().AsSingle();
     }
   }
