@@ -6,33 +6,31 @@ namespace MoonPioneer.UI
 {
   public class LoadingCurtain : MonoBehaviour
   {
-    private const float FADE_DURATION = 1f;
-
     [SerializeField] private CanvasGroup _curtain;
 
     private Tween _tween;
 
     private void Start() => DontDestroyOnLoad(this);
 
-    public void Show(Action action = null)
+    public void Show(float fadeDuration, Action action = null)
     {
       gameObject.SetActive(true);
-      Fade(1f, action);
+      Fade(1f, fadeDuration, action);
     }
 
-    public void Hide(Action action = null)
+    public void Hide(float fadeDuration, Action action = null)
     {
-      Fade(0f, () =>
+      Fade(0f, fadeDuration, () =>
       {
         gameObject.SetActive(false);
         action?.Invoke();
       });
     }
 
-    private void Fade(float endValue, Action action = null)
+    private void Fade(float endValue, float fadeDuration, Action action = null)
     {
       _tween?.Kill();
-      _tween = _curtain.DOFade(endValue, FADE_DURATION).OnComplete(() => action?.Invoke());
+      _tween = _curtain.DOFade(endValue, fadeDuration).OnComplete(() => action?.Invoke());
     }
 
     private void OnDestroy()
