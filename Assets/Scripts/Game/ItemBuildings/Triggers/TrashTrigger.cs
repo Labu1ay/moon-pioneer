@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using MoonPioneer.Game.Inventory.Services.InventoryService;
+using MoonPioneer.Game.Items;
+using MoonPioneer.Game.Items.Services.ItemRepositories;
 using MoonPioneer.Game.Outline;
 using MoonPioneer.InputSystem.Services.Input;
 using UniRx;
@@ -10,13 +13,15 @@ using Zenject;
 
 namespace MoonPioneer.Game.ItemBuildings.Triggers
 {
-  public class InputStorageTrigger : MonoBehaviour
+  public class TrashTrigger : MonoBehaviour
   {
     private const float COLLECT_DELAY = 0.1f;
 
     private IInputService _inputService;
-    
-    [SerializeField] private InputStorage _inputStorage;
+    private IPlayerInventoryService _playerInventoryService;
+    private IItemRepositoryService _itemRepositoryService;
+
+    [SerializeField] private Transform _trashContainerPoint;
     [SerializeField] private Collider _collider;
     [SerializeField] private InteractableOutline _outline;
 
@@ -28,9 +33,14 @@ namespace MoonPioneer.Game.ItemBuildings.Triggers
     private IDisposable _disposable;
 
     [Inject]
-    private void Construct(IInputService inputService)
+    private void Construct(
+      IInputService inputService, 
+      IPlayerInventoryService playerInventoryService,
+      IItemRepositoryService itemRepositoryService)
     {
       _inputService = inputService;
+      _playerInventoryService = playerInventoryService;
+      _itemRepositoryService = itemRepositoryService;
     }
 
     private void Start()
@@ -38,27 +48,26 @@ namespace MoonPioneer.Game.ItemBuildings.Triggers
       _collider.OnTriggerEnterAsObservable().Subscribe(async other =>
       {
         _outline.ShowOutline();
-        
+
         _cts = new CancellationTokenSource();
-        bool cancelHandler = await UniTask.WaitUntil(() => _inputService.Axis is { x: 0, y: 0 }, cancellationToken: _cts.Token)
+        bool cancelHandler = await UniTask
+          .WaitUntil(() => _inputService.Axis is { x: 0, y: 0 }, cancellationToken: _cts.Token)
           .SuppressCancellationThrow();
-        
+
         if (cancelHandler) return;
-        
+
         if (other.gameObject.layer == LayerMask.NameToLayer(Constants.PLAYER_LAYER))
         {
-          if(_inputStorage.StorageIsFull()) return;
-          
-          AddItemsSubscribe();
+          RemoveItemsSubscribe();
         }
       }).AddTo(_disposables);
-      
+
       _collider.OnTriggerExitAsObservable().Subscribe(other =>
       {
         Cancel();
-        
+
         _outline.HideOutline();
-        
+
         if (other.gameObject.layer == LayerMask.NameToLayer(Constants.PLAYER_LAYER))
         {
           _disposable?.Dispose();
@@ -66,7 +75,7 @@ namespace MoonPioneer.Game.ItemBuildings.Triggers
       }).AddTo(_disposables);
     }
 
-    private void AddItemsSubscribe()
+    private void RemoveItemsSubscribe()
     {
       _disposable = Observable.EveryUpdate().Subscribe(_ =>
       {
@@ -76,14 +85,20 @@ namespace MoonPioneer.Game.ItemBuildings.Triggers
         {
           _timer = 0f;
 
-          _inputStorage.TryAddItem();
-          
-          if(_inputStorage.StorageIsFull())
-            _disposable?.Dispose();
+          if (_playerInventoryService.TryGetLastItem(out Item item))
+          {
+            item.transform.SetParent(_itemRepositoryService.Content);
+            item.MoveTo(_trashContainerPoint.position, Quaternion.identity, () =>
+            {
+              _itemRepositoryService.Destroy(item);
+            });
+        
+            _playerInventoryService.RemoveItem(item);
+          }
         }
       });
     }
-    
+
     private void Cancel()
     {
       _cts?.Cancel();
@@ -95,7 +110,7 @@ namespace MoonPioneer.Game.ItemBuildings.Triggers
     {
       _disposables?.Clear();
       _disposable?.Dispose();
-      
+
       Cancel();
     }
   }

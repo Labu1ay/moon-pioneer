@@ -11,5 +11,6 @@ namespace MoonPioneer.Game.Inventory.Services.InventoryService
     bool TryGetItem(ItemTypeId itemTypeId, out Item item);
     void RemoveItem(Item item);
     void OptimizeInventory();
+    bool TryGetLastItem(out Item item);
   }
 }

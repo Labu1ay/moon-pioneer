@@ -57,6 +57,12 @@ namespace MoonPioneer.Game.Inventory.Services.InventoryService
       }
     }
 
+    public bool TryGetLastItem(out Item item)
+    {
+      item = _items.LastOrDefault();
+      return item != null;
+    }
+
     private Vector3 GetNeedItemPosition(Item item)
     {
       return new Vector3(
