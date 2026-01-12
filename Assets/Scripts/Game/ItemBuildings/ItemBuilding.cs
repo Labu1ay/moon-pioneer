@@ -14,6 +14,7 @@ namespace MoonPioneer.Game.ItemBuildings
     [SerializeField] private BuildingCreateStatusUI _buildingCreateStatusUI;
 
     private float _timer;
+    private bool _isCreating;
     
     private OutputStorage _outputStorage;
     private IDisposable _disposable;
@@ -21,8 +22,16 @@ namespace MoonPioneer.Game.ItemBuildings
     private void Start()
     {
       _outputStorage = GetComponent<OutputStorage>();
+
+      _outputStorage.ItemGived += ItemGived;
       
       CreateItem();
+    }
+
+    private void ItemGived()
+    {
+      if(_isCreating == false)
+        CreateItem();
     }
 
     private void CreateItem()
@@ -31,10 +40,12 @@ namespace MoonPioneer.Game.ItemBuildings
       {
         // log in UI
         _buildingCreateStatusUI.Hide().Forget();
+        _isCreating = false;
         return;
       }
       
       _buildingCreateStatusUI.Show();
+      _isCreating = true;
 
       _disposable = Observable.EveryUpdate().Subscribe(_ =>
       {
@@ -51,7 +62,10 @@ namespace MoonPioneer.Game.ItemBuildings
         }
       });
     }
-    
-    
+
+    private void OnDestroy()
+    {
+      _outputStorage.ItemGived -= ItemGived;
+    }
   }
 }

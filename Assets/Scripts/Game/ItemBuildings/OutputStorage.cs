@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MoonPioneer.Game.Items;
 using MoonPioneer.Game.Items.Services.ItemRepositories;
 using Sirenix.OdinInspector;
@@ -20,7 +21,9 @@ namespace MoonPioneer.Game.ItemBuildings
     [SerializeField] private Transform _spawnPoint;
     [SerializeField] private Transform _firstItemStoragePoint;
 
-    private Stack<Item> _items = new Stack<Item>();
+    private Stack<Item> _items = new (16);
+
+    public event Action ItemGived;
 
     [Inject]
     private void Construct(IItemRepositoryService itemRepositoryService)
@@ -37,6 +40,16 @@ namespace MoonPioneer.Game.ItemBuildings
       _items.Push(item);
     }
 
+    public bool TryGetItem(out Item item)
+    {
+      bool result = _items.TryPop(out item);
+      
+      if(result)
+        ItemGived?.Invoke();
+
+      return result;
+    }
+
     public bool StorageIsFull()
     {
       return _items.Count == Capacity;
@@ -50,13 +63,6 @@ namespace MoonPioneer.Game.ItemBuildings
         _firstItemStoragePoint.position.x + _items.Count % COLUMN_SIZE * X_OFFSET,
         _firstItemStoragePoint.position.y,
         _firstItemStoragePoint.position.z - currentColumn * Z_OFFSET);
-    }
-
-    [Button]
-    private void RemoveItem()
-    {
-      var item = _items.Pop();
-      _itemRepositoryService.Destroy(item);
     }
   }
 }
