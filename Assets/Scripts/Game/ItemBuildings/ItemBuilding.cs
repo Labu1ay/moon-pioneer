@@ -15,15 +15,19 @@ namespace MoonPioneer.Game.ItemBuildings
 
     private float _timer;
     private bool _isCreating;
-    
+
+    private InputStorage _inputStorage;
     private OutputStorage _outputStorage;
+    
     private IDisposable _disposable;
 
     private void Start()
     {
+      _inputStorage = GetComponent<InputStorage>();
       _outputStorage = GetComponent<OutputStorage>();
 
       _outputStorage.ItemGived += ItemGived;
+      if(_inputStorage) _inputStorage.ItemAdded += ItemGived;
       
       CreateItem();
     }
@@ -43,9 +47,20 @@ namespace MoonPioneer.Game.ItemBuildings
         _isCreating = false;
         return;
       }
+
+      
+      if (_inputStorage && _inputStorage.StorageIsEmpty())
+      {
+        //log in UI
+        _buildingCreateStatusUI.Hide().Forget();
+        _isCreating = false;
+        return;
+      }
       
       _buildingCreateStatusUI.Show();
       _isCreating = true;
+      
+      if(_inputStorage) _inputStorage.GetItem();
 
       _disposable = Observable.EveryUpdate().Subscribe(_ =>
       {
@@ -66,6 +81,7 @@ namespace MoonPioneer.Game.ItemBuildings
     private void OnDestroy()
     {
       _outputStorage.ItemGived -= ItemGived;
+      if(_inputStorage) _inputStorage.ItemAdded -= ItemGived;
     }
   }
 }

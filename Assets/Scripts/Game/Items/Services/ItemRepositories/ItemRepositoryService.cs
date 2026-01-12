@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using MoonPioneer.Core.Services.AssetProvider;
 using MoonPioneer.Utils;
 using UnityEngine;
@@ -8,58 +8,62 @@ namespace MoonPioneer.Game.Items.Services.ItemRepositories
 {
   public class ItemRepositoryService : IItemRepositoryService, IInitializable
   {
-    private const string BRONZE_ITEM_PATH = "Items/BronzeItem";
-
+    private const string ITEMS_FORMAT_PATH = "Items/{0}Item";
+    
     private readonly IAssetService _assetService;
     
-    private ObjectPool<Item> _bronzePool;
-    
-    private Item _bronzeItemPrefab;
-    
-    
-    private Transform _content;
-
-    public ItemRepositoryService(IAssetService assetService)
+    private readonly ItemTypeId[] _itemTypes =
     {
+      ItemTypeId.Bronze, 
+      ItemTypeId.Silver, 
+      ItemTypeId.Gold
+    };
+    
+    private readonly Dictionary<ItemTypeId, ObjectPool<Item>> _pools = new();
+    private readonly Dictionary<ItemTypeId, Item> _itemPrefabs = new();
+    
+    public Transform Content { get; private set; }
+
+    public ItemRepositoryService(IAssetService assetService) => 
       _assetService = assetService;
-    }
 
     public void Initialize()
     {
-      _content = new GameObject("BronzeItems").transform;
+      Content = new GameObject("ItemsContent").transform;
 
-      _bronzeItemPrefab = _assetService.Load<Item>(BRONZE_ITEM_PATH);
-      _bronzePool = new ObjectPool<Item>(_bronzeItemPrefab, _content, 10);
-    }
-
-    public Item Instantiate(ItemTypeId itemTypeId, Vector3 position, Quaternion rotation)
-    {
-      switch (itemTypeId)
+      foreach (var type in _itemTypes)
       {
-        case ItemTypeId.Bronze: return _bronzePool.Instantiate(_bronzeItemPrefab, _content, position, rotation);
+        var prefab = _assetService.Load<Item>(string.Format(ITEMS_FORMAT_PATH, type));
+        _pools[type] = new ObjectPool<Item>(prefab, Content, 10);
+        _itemPrefabs[type] = prefab;
       }
-      
-      throw new Exception($"[ItemRepositoryService: Instantiate] Item with typeId: {itemTypeId} is not found");
     }
+
+    public Item Instantiate(ItemTypeId itemTypeId, Vector3 position, Quaternion rotation) =>
+      _pools.TryGetValue(itemTypeId, out var pool) 
+        ? pool.Instantiate(_itemPrefabs[itemTypeId], Content, position, rotation) 
+        : throw new KeyNotFoundException($"Pool for {itemTypeId} not found");
 
     public void Destroy(Item item)
     {
-      switch (item.ItemTypeId)
+      if (_pools.TryGetValue(item.ItemTypeId, out var pool))
       {
-        case ItemTypeId.Bronze: _bronzePool.Destroy(item); return;
+        pool.Destroy(item);
+        return;
       }
       
-      throw new Exception($"[ItemRepositoryService: Destroy] Item with typeId: {item.ItemTypeId} is not found");
+      throw new KeyNotFoundException($"Pool for {item.ItemTypeId} not found");
     }
 
-    public void Release(ItemTypeId itemTypeId)
+    public void Release(ItemTypeId itemType)
     {
-      switch (itemTypeId)
+      if (_pools.TryGetValue(itemType, out var pool))
       {
-        case ItemTypeId.Bronze: _bronzePool.Release(); return;
+        pool.Release();
+        return;
       }
       
-      throw new Exception($"[ItemRepositoryService: Release] Item with typeId: {itemTypeId} is not found");
+      throw new KeyNotFoundException($"Pool for {itemType} not found");
     }
   }
 }

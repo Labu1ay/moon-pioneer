@@ -42,10 +42,19 @@ namespace MoonPioneer.Game.Inventory.Services.InventoryService
       return item != null;
     }
 
+    public void RemoveItem(Item item) => _items.Remove(item);
+
     public void OptimizeInventory()
     {
-      foreach (var item in _items) 
-        item.MoveTo(GetNeedItemPosition(item), _inventoryItemPoint.rotation);
+      foreach (var item in _items)
+      {
+        var targetPoint = CreateTargetPoint(item);
+        item.ContinuousMoveTo(targetPoint, () =>
+        {
+          item.transform.parent = _inventoryItemPoint.parent;
+          Object.Destroy(targetPoint.GameObject());
+        });
+      }
     }
 
     private Vector3 GetNeedItemPosition(Item item)

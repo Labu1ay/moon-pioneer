@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using MoonPioneer.Game.Items;
 using MoonPioneer.Game.Items.Services.ItemRepositories;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
@@ -30,8 +29,7 @@ namespace MoonPioneer.Game.ItemBuildings
     {
       _itemRepositoryService = itemRepositoryService;
     }
-
-    [Button]
+    
     public void AddItem(ItemTypeId itemTypeId)
     {
       var item = _itemRepositoryService.Instantiate(itemTypeId, _spawnPoint.position, Quaternion.identity);

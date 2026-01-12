@@ -17,6 +17,8 @@ namespace MoonPioneer.Game.Items
 
     public void MoveTo(Vector3 position, Quaternion rotation, Action callback = null)
     {
+      _disposable?.Dispose();
+      
       _sequence = DOTween.Sequence();
       _sequence.Append(transform.DOMove(position, MOVE_DURATION));
       _sequence.Join(transform.DORotateQuaternion(rotation, MOVE_DURATION));
