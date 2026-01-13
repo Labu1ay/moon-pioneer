@@ -19,12 +19,9 @@ namespace MoonPioneer.Game
       _playerFactory = playerFactory;
     }
     
-    private async void Start()
+    private void Start()
     {
-      
-      // _gameStateService.SetGameState(GameStateType.GAME);
-      await _playerFactory.CreatePlayer(Vector3.zero, Quaternion.identity);
-      // //_enemyFactory.CreateEnemy(new Vector3(0f, 0f, 4f), Quaternion.identity);
+      _playerFactory.CreatePlayer(Vector3.zero, Quaternion.identity);
       _screenService.ShowScreen<GameScreen>();
       
     }

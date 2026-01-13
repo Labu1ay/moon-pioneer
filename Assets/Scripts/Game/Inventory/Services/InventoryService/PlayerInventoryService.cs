@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MoonPioneer.Game.Items;
+using MoonPioneer.Utils.Extensions;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -13,15 +14,12 @@ namespace MoonPioneer.Game.Inventory.Services.InventoryService
 
     private Transform _inventoryItemPoint;
 
-    List<Item> _items = new List<Item>(16);
+    List<Item> _items = new (16);
 
     public void SetInventoryItemPoint(Transform inventoryItemPoint) =>
       _inventoryItemPoint = inventoryItemPoint;
 
-    public bool InventoryIsFull()
-    {
-      return _items.Count == CAPACITY;
-    }
+    public bool InventoryIsFull() => _items.Count == CAPACITY;
 
     public void AddItem(Item item)
     {

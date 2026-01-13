@@ -888,7 +888,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54f4fef645e74217b7bec4e3b877d609, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _createItemDuration: 6
+  _createItemDuration: 3
   _createdItemType: 3
   _buildingCreateStatusUI: {fileID: 3218881946311285595}
 --- !u!114 &401690949809919349

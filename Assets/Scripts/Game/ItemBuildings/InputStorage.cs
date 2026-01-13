@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using MoonPioneer.Game.Inventory.Services.InventoryService;
 using MoonPioneer.Game.Items;
 using MoonPioneer.Game.Items.Services.ItemRepositories;
+using MoonPioneer.Utils.Extensions;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
@@ -12,10 +13,6 @@ namespace MoonPioneer.Game.ItemBuildings
 {
   public class InputStorage : MonoBehaviour
   {
-    private const float X_OFFSET = 1.1f;
-    private const float Z_OFFSET = 0.55f;
-    private const int COLUMN_SIZE = 4;
-    
     private IItemRepositoryService _itemRepositoryService;
     private IPlayerInventoryService _playerInventoryService;
     
@@ -55,10 +52,7 @@ namespace MoonPioneer.Game.ItemBuildings
       foreach (Item item in items)
       {
         item.transform.SetParent(_itemRepositoryService.Content);
-        item.MoveTo(GetStoragePosition(), Quaternion.identity, () =>
-        {
-          ItemAdded?.Invoke();
-        });
+        item.MoveTo(GetStoragePosition(), Quaternion.identity, () => ItemAdded?.Invoke());
         
         _items.Push(item);
         _playerInventoryService.RemoveItem(item);
@@ -76,10 +70,7 @@ namespace MoonPioneer.Game.ItemBuildings
         bool result = _items.TryPop(out Item item);
       
         if(result)
-          item.MoveTo(_buildingPoint.position, Quaternion.identity, () =>
-          {
-            _itemRepositoryService.Destroy(item);
-          });
+          item.MoveTo(_buildingPoint.position, Quaternion.identity, () => _itemRepositoryService.Destroy(item));
       }
     }
 
@@ -88,12 +79,12 @@ namespace MoonPioneer.Game.ItemBuildings
 
     private Vector3 GetStoragePosition()
     {
-      var currentColumn = _items.Count / COLUMN_SIZE;
+      var currentColumn = _items.Count / Constants.COLUMN_SIZE;
       
       return new Vector3(
-        _firstItemStoragePoint.position.x + _items.Count % COLUMN_SIZE * X_OFFSET,
+        _firstItemStoragePoint.position.x + _items.Count % Constants.COLUMN_SIZE * Constants.X_OFFSET,
         _firstItemStoragePoint.position.y,
-        _firstItemStoragePoint.position.z - currentColumn * Z_OFFSET);
+        _firstItemStoragePoint.position.z - currentColumn * Constants.Z_OFFSET);
     }
   }
 }

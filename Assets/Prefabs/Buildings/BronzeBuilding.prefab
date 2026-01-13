@@ -133,7 +133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54f4fef645e74217b7bec4e3b877d609, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _createItemDuration: 2
+  _createItemDuration: 1
   _createdItemType: 1
   _buildingCreateStatusUI: {fileID: 3991360195240578363}
 --- !u!114 &9046471773252136048

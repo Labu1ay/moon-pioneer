@@ -59,6 +59,14 @@ namespace MoonPioneer.Utils.Extensions
       v = tmp;
       return v;
     }
+    
+    public static Vector3 AddZ(this Vector3 v, float zDelta)
+    {
+      var tmp = v;
+      tmp.z = tmp.z + zDelta;
+      v = tmp;
+      return v;
+    }
 
     public static Vector2 AddX(this Vector2 v, float xDelta)
     {

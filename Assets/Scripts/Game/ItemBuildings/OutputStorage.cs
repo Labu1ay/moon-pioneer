@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using MoonPioneer.Game.Items;
 using MoonPioneer.Game.Items.Services.ItemRepositories;
+using MoonPioneer.Utils.Extensions;
 using UnityEngine;
 using Zenject;
 
@@ -9,10 +10,6 @@ namespace MoonPioneer.Game.ItemBuildings
 {
   public class OutputStorage : MonoBehaviour
   {
-    private const float X_OFFSET = 1.1f;
-    private const float Z_OFFSET = 0.55f;
-    private const int COLUMN_SIZE = 4;
-    
     private IItemRepositoryService _itemRepositoryService;
     
     [field: SerializeField] public int Capacity { get; private set; } = 10;
@@ -55,12 +52,12 @@ namespace MoonPioneer.Game.ItemBuildings
 
     private Vector3 GetStoragePosition()
     {
-      var currentColumn = _items.Count / COLUMN_SIZE;
+      var currentColumn = _items.Count / Constants.COLUMN_SIZE;
       
-     return new Vector3(
-        _firstItemStoragePoint.position.x + _items.Count % COLUMN_SIZE * X_OFFSET,
+      return new Vector3(
+        _firstItemStoragePoint.position.x + _items.Count % Constants.COLUMN_SIZE * Constants.X_OFFSET,
         _firstItemStoragePoint.position.y,
-        _firstItemStoragePoint.position.z - currentColumn * Z_OFFSET);
+        _firstItemStoragePoint.position.z - currentColumn * Constants.Z_OFFSET);
     }
   }
 }

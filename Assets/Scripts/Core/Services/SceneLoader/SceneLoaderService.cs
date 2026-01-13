@@ -1,11 +1,8 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
-using MoonPioneer.Core.Services.AssetProvider;
 using MoonPioneer.Core.Services.CurtainProvider;
-using MoonPioneer.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Zenject;
 
 namespace MoonPioneer.Core.Services.SceneLoader
 {

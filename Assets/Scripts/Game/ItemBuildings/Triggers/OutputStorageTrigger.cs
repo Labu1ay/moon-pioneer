@@ -10,8 +10,6 @@ namespace MoonPioneer.Game.ItemBuildings.Triggers
 {
   public class OutputStorageTrigger : MonoBehaviour
   {
-    private const float COLLECT_DELAY = 0.1f;
-    
     private IPlayerInventoryService _playerInventoryService;
     
     [SerializeField] private OutputStorage _outputStorage;
@@ -30,22 +28,29 @@ namespace MoonPioneer.Game.ItemBuildings.Triggers
 
     private void Start()
     {
+      TriggerEnterSubscribe();
+      TriggerExitSubscribe();
+    }
+
+    private void TriggerEnterSubscribe()
+    {
       _collider.OnTriggerEnterAsObservable().Subscribe(other =>
       {
         if (other.gameObject.layer == LayerMask.NameToLayer(Constants.PLAYER_LAYER))
         {
           if(_playerInventoryService.InventoryIsFull()) return;
-          
           CollectItemsSubscribe();
         }
       }).AddTo(_disposables);
-      
+    }
+
+    private void TriggerExitSubscribe()
+    {
       _collider.OnTriggerExitAsObservable().Subscribe(other =>
       {
-        if (other.gameObject.layer == LayerMask.NameToLayer(Constants.PLAYER_LAYER))
-        {
+        if (other.gameObject.layer == LayerMask.NameToLayer(Constants.PLAYER_LAYER)) 
           _disposable?.Dispose();
-        }
+        
       }).AddTo(_disposables);
     }
 
@@ -55,7 +60,7 @@ namespace MoonPioneer.Game.ItemBuildings.Triggers
       {
         _timer += Time.deltaTime;
 
-        if (_timer >= COLLECT_DELAY)
+        if (_timer >= Constants.COLLECT_DELAY)
         {
           _timer = 0f;
 

@@ -12,8 +12,6 @@ namespace MoonPioneer.Game.ItemBuildings.Triggers
 {
   public class InputStorageTrigger : MonoBehaviour
   {
-    private const float COLLECT_DELAY = 0.1f;
-
     private IInputService _inputService;
     
     [SerializeField] private InputStorage _inputStorage;
@@ -35,6 +33,12 @@ namespace MoonPioneer.Game.ItemBuildings.Triggers
 
     private void Start()
     {
+      TriggerEnterSubscribe();
+      TriggerExitSubscribe();
+    }
+
+    private void TriggerEnterSubscribe()
+    {
       _collider.OnTriggerEnterAsObservable().Subscribe(async other =>
       {
         _outline.ShowOutline();
@@ -48,21 +52,22 @@ namespace MoonPioneer.Game.ItemBuildings.Triggers
         if (other.gameObject.layer == LayerMask.NameToLayer(Constants.PLAYER_LAYER))
         {
           if(_inputStorage.StorageIsFull()) return;
-          
           AddItemsSubscribe();
         }
       }).AddTo(_disposables);
-      
+    }
+
+    private void TriggerExitSubscribe()
+    {
       _collider.OnTriggerExitAsObservable().Subscribe(other =>
       {
         Cancel();
         
         _outline.HideOutline();
         
-        if (other.gameObject.layer == LayerMask.NameToLayer(Constants.PLAYER_LAYER))
-        {
+        if (other.gameObject.layer == LayerMask.NameToLayer(Constants.PLAYER_LAYER)) 
           _disposable?.Dispose();
-        }
+        
       }).AddTo(_disposables);
     }
 
@@ -72,7 +77,7 @@ namespace MoonPioneer.Game.ItemBuildings.Triggers
       {
         _timer += Time.deltaTime;
 
-        if (_timer >= COLLECT_DELAY)
+        if (_timer >= Constants.COLLECT_DELAY)
         {
           _timer = 0f;
 
