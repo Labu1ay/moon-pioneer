@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 8092015592756390590}
   - component: {fileID: 5367151416592421041}
   - component: {fileID: 9046471773252136048}
+  - component: {fileID: 6420888399785284853}
   m_Layer: 0
   m_Name: BronzeBuilding
   m_TagString: Untagged
@@ -150,6 +151,27 @@ MonoBehaviour:
   <Capacity>k__BackingField: 10
   _spawnPoint: {fileID: 2476300201677380482}
   _firstItemStoragePoint: {fileID: 3965322409054180241}
+--- !u!65 &6420888399785284853
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1014995095800959859}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3, y: 3, z: 3}
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!1 &2361368085890705070
 GameObject:
   m_ObjectHideFlags: 0

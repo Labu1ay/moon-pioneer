@@ -849,6 +849,7 @@ GameObject:
   - component: {fileID: 4899665870935169911}
   - component: {fileID: 401690949809919349}
   - component: {fileID: 6867404363315264223}
+  - component: {fileID: 5168215321552607178}
   m_Layer: 0
   m_Name: GoldBuilding
   m_TagString: Untagged
@@ -887,7 +888,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54f4fef645e74217b7bec4e3b877d609, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _createItemDuration: 2
+  _createItemDuration: 6
   _createdItemType: 3
   _buildingCreateStatusUI: {fileID: 3218881946311285595}
 --- !u!114 &401690949809919349
@@ -921,6 +922,27 @@ MonoBehaviour:
   <Capacity>k__BackingField: 10
   _spawnPoint: {fileID: 1412630714408738288}
   _firstItemStoragePoint: {fileID: 2639330297692188124}
+--- !u!65 &5168215321552607178
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4716410440999226052}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3, y: 3, z: 3}
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!1 &4911248109084204752
 GameObject:
   m_ObjectHideFlags: 0

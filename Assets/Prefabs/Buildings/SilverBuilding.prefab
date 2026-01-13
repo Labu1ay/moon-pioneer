@@ -510,6 +510,7 @@ GameObject:
   - component: {fileID: 2280102091821399651}
   - component: {fileID: 1489548373229012290}
   - component: {fileID: 5038099588473754265}
+  - component: {fileID: 2219314961703746684}
   m_Layer: 0
   m_Name: SilverBuilding
   m_TagString: Untagged
@@ -548,7 +549,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54f4fef645e74217b7bec4e3b877d609, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _createItemDuration: 2
+  _createItemDuration: 4
   _createdItemType: 2
   _buildingCreateStatusUI: {fileID: 3617714937622270482}
 --- !u!114 &1489548373229012290
@@ -582,6 +583,27 @@ MonoBehaviour:
   <Capacity>k__BackingField: 10
   _spawnPoint: {fileID: 8143538781078848604}
   _firstItemStoragePoint: {fileID: 2279527925032113940}
+--- !u!65 &2219314961703746684
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4109089257365455833}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3, y: 3, z: 3}
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!1 &4213738577156645340
 GameObject:
   m_ObjectHideFlags: 0
